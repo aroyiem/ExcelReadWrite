@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -25,15 +26,17 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public class ApachePOIExcelRead {
     
-    private static final String FILE_NAME = "src/main/resources/city.xls";
+    private static final String FILE_NAME_ITEMCATEGORY = "src/main/resources/itemCategory.xlsx";
+    private static final String FILE_NAME_ITEMGROUP = "src/main/resources/itemGroup.xlsx";
+    private static final String FILE_NAME_ITEMTYPE = "src/main/resources/itemType.xlsx";
     private static ResourceBundle property = ResourceBundle.getBundle("state");
     
     public static void main(String[] args) {
 
         try {
 
-            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-            Workbook workbook = new HSSFWorkbook(excelFile);
+            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME_ITEMTYPE));
+            Workbook workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheetAt(0);
             Iterator<Row> iterator = datatypeSheet.iterator();
             StringBuilder stringBuilder = new StringBuilder();
@@ -42,8 +45,8 @@ public class ApachePOIExcelRead {
 
                 Row currentRow = iterator.next();
                 Iterator<Cell> cellIterator = currentRow.iterator();
-                String city="";
-                String stateId="";
+                String code="";
+                //String stateId="";
 
                 while (cellIterator.hasNext()) {
 
@@ -57,15 +60,15 @@ public class ApachePOIExcelRead {
 //                    }
                     if (currentCell.getCellTypeEnum() == CellType.STRING) {
                         if(currentCell.getColumnIndex() == 0)
-                            city = currentCell.getStringCellValue();
-                        else if(currentCell.getColumnIndex() == 1){
+                            code = currentCell.getStringCellValue();
+                        /*else if(currentCell.getColumnIndex() == 1){
                             stateId = (String)property.getObject(currentCell.getStringCellValue());
-                        }
+                        }*/
                     }
 
                 }
                 //System.out.println(city+"--"+stateId);
-                stringBuilder.append(Util.generateInsert(city, city, stateId));
+                stringBuilder.append(Util.generateInsertForItemType(code, code));
                 stringBuilder.append("\n");
             }
             System.out.println(stringBuilder.toString());
